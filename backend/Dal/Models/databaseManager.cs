@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dal.Models;
 
-public partial class databaseManager : DbContext
+public partial class DatabaseManager : DbContext
 {
-    public databaseManager()
+    public DatabaseManager()
     {
     }
 
-    public databaseManager(DbContextOptions<databaseManager> options)
+    public DatabaseManager(DbContextOptions<DatabaseManager> options)
         : base(options)
     {
     }
@@ -23,10 +23,12 @@ public partial class databaseManager : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\User\\Desktop\\Programming Task\\AI-Driven Learning Platform\\backend\\Dal\\Database\\AI-DrivenDB.mdf\";Integrated Security=True;Connect Timeout=30");
-
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+         if (!optionsBuilder.IsConfigured)
+    {
+             optionsBuilder.UseSqlServer("Name=DefaultConnection");
+    } 
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
