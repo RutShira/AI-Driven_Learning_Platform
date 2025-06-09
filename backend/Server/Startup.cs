@@ -1,6 +1,7 @@
 ﻿using BL;
 using BL.Api;
 using Dal;
+using Microsoft.OpenApi.Models;
 
 public class Startup
 {
@@ -20,6 +21,21 @@ public class Startup
         // Register DalManager with a connection string from configuration
         string connectionString = _configuration.GetConnectionString("DefaultConnection");
         services.AddScoped<IBL>(bl => new BLManager(connectionString));
+        // הוספת הגדרת CORS
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowSpecificOrigin",
+
+                builder => builder.WithOrigins("http://localhost:5173") // החלף בכתובת המתאימה
+
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader());
+        });
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+        });
+
     }
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
