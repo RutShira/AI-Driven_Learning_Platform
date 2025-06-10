@@ -39,13 +39,13 @@ namespace BL.Services
             {
                 // טיפול בשגיאת עדכון בבסיס הנתונים
                 Console.WriteLine($"Database error: {dbEx.Message}");
-                throw new Exception($"Database error: {dbEx.Message}", dbEx);
+                throw new System.Exception($"Database error: {dbEx.Message}", dbEx);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 // טיפול בשגיאות אחרות
                 Console.WriteLine($"An error occurred: {ex.Message}");
-                throw new Exception($"An error occurred: {ex.Message}", ex);
+                throw new System.Exception($"An error occurred: {ex.Message}", ex);
 
             }
         }
@@ -68,10 +68,10 @@ namespace BL.Services
             {
                 _user.Delete(id);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 // טיפול בשגיאה המתאימה (לוג, זריקת שגיאה מותאמת וכו')
-                throw new Exception("An error occurred while deleting the category.", ex);
+                throw new System.Exception("An error occurred while deleting the category.", ex);
             }
 
         }
@@ -85,16 +85,7 @@ namespace BL.Services
                 Phone = c.Phone,
                 Email = c.Email,
                 Role = c.Role,
-                Prompts = c.Prompts.Select(p => new BLPrompt
-                {
-                    UserId = p.UserId,
-                    CategoryId = p.CategoryId,
-                    SubCategoryId = p.SubCategoryId,
-                    Response = p.Response,
-                    Prompt1 = p.Prompt1,
-                    CreatedAt = p.CreatedAt,
-
-                }).ToList()
+               
             });
         }
 
@@ -104,6 +95,10 @@ namespace BL.Services
                 try
                 {
                     User c = _user.Read(id);
+                    if (c == null)
+                    {
+                        throw new KeyNotFoundException($"User with ID {id} not found.");
+                    }
                     BLUser bLUser = new()
                     {
                         UserId = c.UserId,
@@ -111,16 +106,7 @@ namespace BL.Services
                         Phone = c.Phone,
                         Email = c.Email,
                         Role = c.Role,
-                        Prompts = c.Prompts.Select(
-                            p => new BLPrompt
-                            {
-                                UserId = p.UserId,
-                                CategoryId = p.CategoryId,
-                                SubCategoryId = p.SubCategoryId,
-                                Response = p.Response,
-                                Prompt1 = p.Prompt1,
-                                CreatedAt = p.CreatedAt,
-                            }).ToList()
+                       
 
                     };
                     return bLUser;
@@ -132,11 +118,11 @@ namespace BL.Services
                     throw new InvalidOperationException($"GetCategory failed: {ex.Message}", ex);
 
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     // טיפול בשגיאות אחרות
                     Console.WriteLine($"An error occurred: {ex.Message}");
-                    throw new Exception($"An error occurred: {ex.Message}", ex);
+                    throw new System.Exception($"An error occurred: {ex.Message}", ex);
                 }
             }
         }
@@ -152,15 +138,7 @@ namespace BL.Services
                     Phone = entity.Phone,
                     Email = entity.Email,
                     Role = entity.Role,
-                    Prompts = entity.Prompts.Select(p => new Prompt
-                    {
-                        UserId = p.UserId,
-                        CategoryId = p.CategoryId,
-                        SubCategoryId = p.SubCategoryId,
-                        Response = p.Response,
-                        Prompt1 = p.Prompt1,
-                        CreatedAt = p.CreatedAt,
-                    }).ToList()
+                   
 
                 };
                 _user.Update(user);
@@ -170,11 +148,11 @@ namespace BL.Services
                 // טיפול בשגיאה במקרה שהישות לא נמצאה
                 throw new InvalidOperationException($"Update failed: {ex.Message}", ex);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 // טיפול בשגיאות אחרות
                 Console.WriteLine($"An error occurred: {ex.Message}");
-                throw new Exception($"An error occurred: {ex.Message}", ex);
+                throw new System.Exception($"An error occurred: {ex.Message}", ex);
 
             }
         }

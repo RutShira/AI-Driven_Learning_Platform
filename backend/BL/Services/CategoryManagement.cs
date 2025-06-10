@@ -43,10 +43,10 @@ namespace BL.Services
             {
                 _category.Delete(id);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 // טיפול בשגיאה המתאימה (לוג, זריקת שגיאה מותאמת וכו')
-                throw new Exception("An error occurred while deleting the category.", ex);
+                throw new System.Exception("An error occurred while deleting the category.", ex);
             }
 
         }

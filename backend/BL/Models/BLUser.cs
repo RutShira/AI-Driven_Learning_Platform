@@ -29,6 +29,6 @@ namespace BL.Models
 
         public string? Role { get; set; }
 
-        public virtual ICollection<BLPrompt> Prompts { get; set; } = new List<BLPrompt>();
+      
     }
 }

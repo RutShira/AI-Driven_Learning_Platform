@@ -22,7 +22,7 @@ namespace BL.Models
         [StringLength(500, ErrorMessage = "The description cannot exceed 500 characters.")] // אורך מקסימלי
         public string? Description { get; set; }
 
-        public virtual ICollection<BLSubCategory> SubCategories { get; set; } = new List<BLSubCategory>();
+        public virtual ICollection<BLSubCategory>? SubCategories { get; set; } = new List<BLSubCategory>();
     }
 }
 

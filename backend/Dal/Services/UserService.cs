@@ -1,5 +1,6 @@
 ﻿using Dal.Api;
 using Dal.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,30 @@ namespace Dal.Services
         }
         public void Create(User entity)
         {
-            _context.Users.Add(entity);
-            _context.SaveChanges();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    // הפעלת IDENTITY_INSERT
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
+
+                    // הכנס את המשתמש
+                    _context.Users.Add(entity);
+                    _context.SaveChanges();
+
+                    // כיבוי IDENTITY_INSERT
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Error creating the user.", ex);
+                }
+            }
         }
+
 
 
         public void Delete(int id)

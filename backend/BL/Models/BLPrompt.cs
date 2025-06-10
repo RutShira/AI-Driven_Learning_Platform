@@ -28,8 +28,8 @@ namespace BL.Models
         [StringLength(500, ErrorMessage = "Prompt cannot exceed 500 characters.")] // אורך מקסימלי
         public string Prompt1 { get; set; } = null!;
 
-        [Required(ErrorMessage = "Response is required.")] // חובה עם הודעת שגיאה
-        public string Response { get; set; } = null!;
+       
+        public string? Response { get; set; } 
 
         public DateTime? CreatedAt { get; set; }
 

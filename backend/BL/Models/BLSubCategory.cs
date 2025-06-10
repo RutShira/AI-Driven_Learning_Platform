@@ -22,6 +22,8 @@ namespace BL.Models
         [Required] // חובה
         public int CategoryId { get; set; }
 
+
+
     }
 }
 
