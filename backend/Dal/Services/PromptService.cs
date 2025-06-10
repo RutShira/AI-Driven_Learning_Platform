@@ -20,6 +20,8 @@ namespace Dal.Services
             _context.Prompts.Add(entity);
             _context.SaveChanges();
         }
+      
+       
 
 
         public void Delete(int id)

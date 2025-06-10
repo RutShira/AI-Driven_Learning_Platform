@@ -8,5 +8,10 @@ namespace BL.Api
 {
     public interface IBL
     {
+        
+        public IBLUser User { get; }
+        public IBLCategory Category { get; }
+        public IBLPrompt Prompt { get; }
+        public IBLSubCategory SubCategory { get; }
     }
 }

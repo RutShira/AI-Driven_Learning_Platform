@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace Dal.Api
 {
+
     public interface IPrompt : ICrud<Prompt>
     {
+       
+        
     }
 }
