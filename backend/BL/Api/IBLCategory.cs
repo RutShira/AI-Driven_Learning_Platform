@@ -11,6 +11,7 @@ namespace BL.Api
 {
     public interface IBLCategory: ICrud<BLCategory>
     {
+
       
  
     }

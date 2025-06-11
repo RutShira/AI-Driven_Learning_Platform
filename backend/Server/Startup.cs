@@ -54,20 +54,19 @@ public class Startup
         services.AddCors(options =>
         {
             options.AddPolicy("AllowSpecificOrigin",
-                builder => builder.WithOrigins("http://localhost:5173")
+                builder => builder.WithOrigins("http://localhost:5174")
                                   .AllowAnyMethod()
                                   .AllowAnyHeader());
         });
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app)
     {
-        if (env.IsDevelopment())
-        {
+      
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
-        }
+       
         app.UseMiddleware<ErrorHandlingMiddleware>();
 
         app.UseHttpsRedirection();

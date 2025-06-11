@@ -31,11 +31,12 @@ namespace BL.Services
                 // המרת BLPrompt ל-Prompt
                 var dalPrompt = new Prompt
                 {
+
                     UserId = prompt.UserId,
                     CategoryId = prompt.CategoryId,
                     SubCategoryId = prompt.SubCategoryId,
                     Prompt1 = prompt.Prompt1,
-                    Response = prompt.Response,
+                
                     CreatedAt = DateTime.UtcNow // או כל תאריך אחר שתרצה
                 };
                 // שליחת הפנייה ל-AI
@@ -143,6 +144,7 @@ namespace BL.Services
                     .Where(p => p.UserId == userId)
                     .Select(p => new BLPrompt
                     {
+                        Id=p.Id,
                         UserId = p.UserId,
                         CategoryId = p.CategoryId,
                         SubCategoryId = p.SubCategoryId,
@@ -157,7 +159,7 @@ namespace BL.Services
         async Task CreateAsync(BLPrompt entity)
         {
             // Implementation for asynchronous creation of a Prompt entity  
-            await Task.Run(() => _learningRepository.Create(new Prompt
+            await Task.Run(() => { Prompt p = _learningRepository.Create(new Prompt
             {
                 UserId = entity.UserId,
                 CategoryId = entity.CategoryId,
@@ -165,7 +167,9 @@ namespace BL.Services
                 Prompt1 = entity.Prompt1,
                 Response = entity.Response,
                 CreatedAt = DateTime.UtcNow // or any other date you want  
-            }));
+            }
+            );}
+            );
         }
 
 
@@ -181,6 +185,7 @@ namespace BL.Services
 
                 return new BLPrompt
                 {
+                    Id = prompt.Id,
                     UserId = prompt.UserId,
                     CategoryId = prompt.CategoryId,
                     SubCategoryId = prompt.SubCategoryId,
@@ -264,7 +269,7 @@ namespace BL.Services
     _learningRepository.GetAll()
         .Where(p => p.UserId == userId&& p.CategoryId==idCat)
         .Select(p => new BLPrompt
-        {
+        {Id = p.Id,
             UserId = p.UserId,
             CategoryId = p.CategoryId,
             SubCategoryId = p.SubCategoryId,

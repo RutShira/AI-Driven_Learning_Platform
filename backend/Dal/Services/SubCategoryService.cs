@@ -15,10 +15,11 @@ namespace Dal.Services
         {
             _context = db;
         }
-        public void Create(SubCategory entity)
+        public SubCategory? Create(SubCategory entity)
         {
             _context.SubCategories.Add(entity);
             _context.SaveChanges();
+            return _context.SubCategories?.FirstOrDefault(e => e.Name == entity.Name);
         }
 
 

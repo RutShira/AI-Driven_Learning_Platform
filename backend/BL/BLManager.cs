@@ -24,13 +24,15 @@ namespace BL
             services.AddScoped<IBLUser, UserManagement>();
             services.AddScoped<IBLCategory, CategoryManagement>();
             services.AddScoped<IBLPrompt, PromptHandling>();
-          
+            services.AddScoped<IBLSubCategory, SubCategoryManagment>();
+
 
             ServiceProvider serviceProvider = services.BuildServiceProvider();
             User = serviceProvider.GetRequiredService<IBLUser>();
             Category = serviceProvider.GetRequiredService<IBLCategory>();
             Prompt = serviceProvider.GetRequiredService<IBLPrompt>();
-            
+            SubCategory = serviceProvider.GetRequiredService<IBLSubCategory>();
+
         }
 
     }

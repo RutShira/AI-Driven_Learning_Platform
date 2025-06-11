@@ -13,7 +13,7 @@ namespace BL.Models
     {
         [Key] // מציין שמדובר במפתח ראשי
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // מפתח רץ
-        public int SubCategoryId { get; }
+        public int SubCategoryId { get; set; }
 
         [Required(ErrorMessage = "Name is required.")] // חובה עם הודעת שגיאה
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters.")] // אורך מקסימלי

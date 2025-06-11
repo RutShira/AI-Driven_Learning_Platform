@@ -17,10 +17,12 @@ namespace Dal.Services
         {
             _context = db;
         }
-        public void Create(Category entity)
+        public Category? Create(Category entity)
         {
             _context.Categories.Add(entity);
             _context.SaveChanges();
+            return _context.Categories?.FirstOrDefault(e => e.Name == entity.Name);
+
         }
 
 

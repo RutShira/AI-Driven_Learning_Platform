@@ -13,13 +13,15 @@ namespace BL.Services
     public class SubCategoryManagment : IBLSubCategory
     {
         private readonly ISubCategory _subCategoryRepository;
+        private readonly ICategory _categoryRepository;
 
         public SubCategoryManagment(IDal learningRepository)
         {
             _subCategoryRepository = learningRepository.SubCategory;
+            _categoryRepository = learningRepository.Category;
         }
-
-        public void Create(BLSubCategory entity)
+   
+        public BLSubCategory Create(BLSubCategory entity)
         {
             if (entity == null)
             {
@@ -33,11 +35,23 @@ namespace BL.Services
             {
                 throw new ArgumentException("Category ID must be greater than zero.", nameof(entity.CategoryId));
             }
-            _subCategoryRepository.Create(new SubCategory
+           var v= _categoryRepository.Read(entity.CategoryId) ?? throw new KeyNotFoundException($"Category with ID {entity.CategoryId} not found.");
+            SubCategory subCategory= _subCategoryRepository.Create(new SubCategory
             {
+                SubCategoryId = entity.SubCategoryId,
                 Name = entity.Name,
-                CategoryId = entity.CategoryId
+                CategoryId = entity.CategoryId,
+                Category = v
+
             });
+
+           return new BLSubCategory
+            {
+                SubCategoryId = subCategory.SubCategoryId,
+                Name = subCategory.Name,
+                CategoryId = subCategory.CategoryId
+            };
+
 
         }
 
@@ -59,12 +73,15 @@ namespace BL.Services
 
         public IEnumerable<BLSubCategory> GetAll()
         {
-            return _subCategoryRepository.GetAll().Select(sc => new BLSubCategory
+
+            List<BLSubCategory> v=_subCategoryRepository.GetAll().Select(sc => new BLSubCategory
             {
-                
+                SubCategoryId = sc.CategoryId,
                 Name = sc.Name,
                 CategoryId = sc.CategoryId
-            });
+            }).ToList();
+
+            return v;
 
         }
 
@@ -76,12 +93,10 @@ namespace BL.Services
             }
 
             var subCategories = _subCategoryRepository.GetAll().Where(e=>e.CategoryId== idCategory);
-            if (subCategories == null || !subCategories.Any())
-            {
-                throw new KeyNotFoundException($"No subcategories found for Category ID {idCategory}.");
-            }
+            
             return subCategories.Select(sc => new BLSubCategory
             {
+                SubCategoryId= sc.SubCategoryId,
                 Name = sc.Name,
                 CategoryId = sc.CategoryId
             }).ToList();
@@ -100,6 +115,7 @@ namespace BL.Services
             }
             return new BLSubCategory
             {
+                SubCategoryId = subCategory.SubCategoryId,
                 Name = subCategory.Name,
                 CategoryId = subCategory.CategoryId
             };

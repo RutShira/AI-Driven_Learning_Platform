@@ -15,10 +15,11 @@ namespace Dal.Services
         {
             _context = db;
         }
-        public void Create(Prompt entity)
+        public Prompt? Create(Prompt entity)
         {
             _context.Prompts.Add(entity);
             _context.SaveChanges();
+            return _context.Prompts?.FirstOrDefault(e => e.Prompt1 == entity.Prompt1);
         }
       
        

@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Server.Controllers
@@ -45,6 +46,24 @@ namespace Server.Controllers
                 return Ok(new { Token = tokenHandler.WriteToken(token) });
             }
             return Unauthorized();
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult GetMe()
+        {
+            var userIdClaim = User.FindFirst("id")?.Value;
+
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            {
+                return BadRequest("Invalid user ID.");
+            }
+
+            var user = _userService.Read(userId);
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
         }
     }
 }

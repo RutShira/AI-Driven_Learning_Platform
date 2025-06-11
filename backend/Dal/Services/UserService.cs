@@ -16,7 +16,7 @@ namespace Dal.Services
         {
             _context = db;
         }
-        public void Create(User entity)
+        public User? Create(User entity)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -33,6 +33,8 @@ namespace Dal.Services
                     _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
 
                     transaction.Commit();
+                    // החזרת המשתמש שנוצר
+                    return _context.Users.FirstOrDefault(e => e.Name == entity.Name);
                 }
                 catch (Exception ex)
                 {

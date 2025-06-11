@@ -19,14 +19,35 @@ namespace BL.Services
             _category = dal.Category;
 
         }
-        public void Create(BLCategory entity)
+        public BLCategory Create(BLCategory entity)
         {
-            _category.Create(new Category
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity), "Category cannot be null.");
+            }
+            if (string.IsNullOrWhiteSpace(entity.Name))
+            {
+                throw new ArgumentException("Category name cannot be empty.", nameof(entity.Name));
+            }
+           
+            Category category=   new Category
             {
                 CategoryId = entity.CategoryId,
                 Name = entity.Name,
                 Description = entity.Description
-            });
+            };
+            Category v = _category.Create(category);
+            BLCategory bLCategory = new()
+            {
+                CategoryId = v.CategoryId,
+                Name = v.Name,
+                Description = v.Description,
+              
+            };
+
+            return bLCategory;
+          
         }
 
         public void Delete(int id)
@@ -58,10 +79,12 @@ namespace BL.Services
         {
             return _category.GetAll().Select(c => new BLCategory
             {
+                CategoryId=c.CategoryId,
                 Name = c.Name,
                 Description = c.Description,
                 SubCategories = c.SubCategories?.Select(sc => new BLSubCategory
                 {
+                    SubCategoryId= sc.SubCategoryId,
                     Name = sc.Name,
                     CategoryId = sc.CategoryId,
 
@@ -80,10 +103,12 @@ namespace BL.Services
                 Category c = _category.Read(id);
                 BLCategory bLCategory = new()
                 {
+                    CategoryId=c.CategoryId,
                     Name = c.Name,
                     Description = c.Description,
                     SubCategories = c.SubCategories?.Select(sc => new BLSubCategory
                     {
+                        SubCategoryId=sc.SubCategoryId,
                         Name = sc.Name,
                         CategoryId = sc.CategoryId,
                     }).ToList() ?? new List<BLSubCategory>()
@@ -106,10 +131,12 @@ namespace BL.Services
             {
                 Category category = new()
                 {
+                    CategoryId=entity.CategoryId,
                     Name = entity.Name,
                     Description = entity.Description,
                     SubCategories = entity.SubCategories?.Select(sc => new SubCategory
                     {
+                        SubCategoryId = sc.SubCategoryId,
                         Name = sc.Name,
                         CategoryId = sc.CategoryId,
                     }).ToList() ?? new List<SubCategory>(),
