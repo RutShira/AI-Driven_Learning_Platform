@@ -76,7 +76,7 @@ namespace BL.Services
 
             List<BLSubCategory> v=_subCategoryRepository.GetAll().Select(sc => new BLSubCategory
             {
-                SubCategoryId = sc.CategoryId,
+                SubCategoryId = sc.SubCategoryId,
                 Name = sc.Name,
                 CategoryId = sc.CategoryId
             }).ToList();

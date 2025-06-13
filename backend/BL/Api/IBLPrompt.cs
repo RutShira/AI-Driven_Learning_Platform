@@ -12,8 +12,14 @@ namespace BL.Api
     {
         Task<IEnumerable<BLPrompt>> GetPromptsByUserIdAsync(int userId);
         Task<IEnumerable<BLPrompt>> GetPromptsByUserIdAndCategotyAsync(int userId,int idCat);
-        Task<BLPrompt> ProcessPromptAsync(BLPrompt prompt);
+        Task<string> ProcessPromptAsync(BLPrompt prompt);
         Task CreateAsync(BLPrompt entity); // Removed 'async' modifier as interfaces cannot have method bodies.  
         Task<string> CallOpenAiApi(string promptText);
+        Task<BLPrompt> GetPromptByIdAsync(int id);
+        Task UpdateAsync(BLPrompt entity);
+        Task DeleteAsync(int id);
+        Task<List<BLPrompt>> GetAllAsync();
+        Task<List<BLPrompt>> GetPromptsByUserIdAndSubCategoryAsync(int userId, int subCategoryId);
+
     }
 }

@@ -1,17 +1,14 @@
 ﻿using System;
-using Dal.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dal.Api
+namespace BL.Models
 {
-
-    public interface IPrompt : ICrud<Prompt>
+    public class OpenAiSettings
     {
-        Task<List<Prompt>> GetAllAsync();
-
-
+        public string ApiKey { get; set; }
     }
+
 }

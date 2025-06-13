@@ -9,5 +9,6 @@ namespace Dal.Api
 {
     public interface ISubCategory : ICrud<SubCategory>
     {
+        List<SubCategory> GetAllByCategory(int idCategory);
     }
 }

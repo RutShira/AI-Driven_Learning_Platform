@@ -1,14 +1,12 @@
 import React from 'react';
 import LessonContent from '../components/LessonContent';
 import { Container, Typography } from '@mui/material';
+import CoursePage from '../components/CoursePage';
 
-const Lesson = () => {
+const Lesson = ( ) => {
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>
-        Lesson Title
-      </Typography>
-      <LessonContent />
+      <CoursePage/>
     </Container>
   );
 };

@@ -39,6 +39,12 @@ namespace Dal.Services
             return _context.SubCategories.ToList();
         }
 
+        public List<SubCategory> GetAllByCategory(int idCategory)
+        {
+            return _context.SubCategories
+                .Where(sc => sc.CategoryId == idCategory)
+                .ToList();
+        }
 
         public SubCategory Read(int id)
         {

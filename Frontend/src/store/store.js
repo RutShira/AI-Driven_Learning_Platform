@@ -5,6 +5,7 @@ import categoriesReducer from './categoriesSlice';
 import subCategoriesReducer from './subCategoriesSlice';
 import userReducer from './userSlice';
 import promptsReducer from './promptsSlice';
+import categoryReducer from './categorySlice';
 import { createStoreHook } from 'react-redux';
 
 
@@ -16,6 +17,7 @@ export const store = configureStore({
     user: userReducer,
     categories: categoriesReducer,
     subCategories:subCategoriesReducer,
-    prompts: promptsReducer
+    prompts: promptsReducer,
+    category:categoryReducer
   },
 });

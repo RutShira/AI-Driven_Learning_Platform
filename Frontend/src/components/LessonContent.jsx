@@ -1,23 +1,36 @@
-import React from 'react'
-import { Typography, Paper, Box } from '@mui/material'
+import React, { useEffect } from 'react'
+import { Typography, Paper, Box, ListItem, ListItemText, List } from '@mui/material'
+import { fetchSubCategories } from '../store/thunk';
+import { useDispatch, useSelector } from 'react-redux';
 
 const LessonContent = ({ lesson }) => {
+
+
+
+  //סינון תתי־קטגוריות שרלוונטיים לקטגוריה הנוכחית (אם צריך)
+  
+
+
   return (
     <Paper elevation={3} style={{ padding: '16px', margin: '16px 0' }}>
       <Typography variant="h4" gutterBottom>
-        {lesson.name}
+        {/* {lesson.id} */}
       </Typography>
-      <Box>
-        <Typography variant="body1" paragraph>
-          {lesson.content}
-        </Typography>
-        {lesson.video && (
-          <video controls style={{ width: '100%', marginTop: '16px' }}>
-            <source src={lesson.video} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+           {loading === 'loading' && <CircularProgress size={20} />}
+           {error && <Typography color="error">{error}</Typography>} 
+       { filteredSubCategories && filteredSubCategories.length > 0 && (
+          <>
+            <Typography variant="subtitle1" sx={{ mt: 2 }}>Sub Categories:</Typography>
+            <List dense>
+              {filteredSubCategories.map((sub) => (
+                <ListItem key={sub.subCategoryId}>
+                  <ListItemText primary={sub.name} />
+                </ListItem>
+              ))}
+            </List>
+          </>
         )}
-      </Box>
+   
     </Paper>
   )
 }

@@ -13,6 +13,9 @@ import Dashboard from './components/Dashboard';
 import LoginForm from './components/LoginForm';
 import { ThemeProvider } from '@mui/material/styles';
 import muiTheme from './theme/muiTheme';
+import CoursePage from './components/CoursePage';
+import Register from './pages/Register';
+import Admin from './pages/Admin';
 
 
 
@@ -29,8 +32,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/courses" element={<Courses />} />
-            <Route path="/lesson/:id" element={<Lesson />} />
+          <Route path="/course/:courseId" element={<Lesson />} />
             <Route path="/dashboard" element={<Dashboard />} />
+             <Route path="/signup" element={<Register />} />
+             <Route path="/admin" element={<Admin />} />
           </Routes>
         </Router>
       </ThemeProvider>

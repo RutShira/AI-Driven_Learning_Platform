@@ -21,6 +21,9 @@ const NavigationBar = () => {
         <Button color="inherit" component={Link} to="/login">
           Login
         </Button>
+        <Button color="inherit" component={Link} to="/signup">
+          Sign Up
+        </Button>
       </Toolbar>
     </MuiAppBar>
   );

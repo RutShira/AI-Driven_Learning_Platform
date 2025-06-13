@@ -1,5 +1,6 @@
 ﻿using Dal.Api;
 using Dal.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,11 @@ namespace Dal.Services
         {
             return _context.Prompts.ToList();
         }
+        public async Task<List<Prompt>> GetAllAsync()
+        {
+            return await _context.Prompts.ToListAsync();
+        }
+
 
 
         public Prompt? Read(int id)

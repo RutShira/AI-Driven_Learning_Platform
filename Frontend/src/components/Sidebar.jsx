@@ -21,7 +21,7 @@ const Sidebar = () => {
           </ListItemIcon>
           <ListItemText primary="Courses" />
         </ListItemButton>
-        <ListItemButton component={Link} to="/profile">
+        <ListItemButton component={Link} to="/login">
           <ListItemIcon>
             <ProfileIcon />
           </ListItemIcon>

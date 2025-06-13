@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import  { useEffect } from 'react';
+
 import CourseCard from './CourseCard';
 import { Grid, CircularProgress, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCategories, fetchSubCategoriesByCategory } from '../store/thunk';
+import { fetchCategories } from '../store/thunk';
 import { useNavigate } from 'react-router-dom';
 
 const CourseList = () => {
@@ -11,17 +12,11 @@ const CourseList = () => {
   const user = useSelector((state) => state.user.user);
   const { data: courses, status, error } = useSelector((state) => state.categories);
 
-  const categories = useSelector((state) => state.categories.data);
-    useEffect(() => {
-   
-     dispatch(fetchCategories());
-      if (categories && categories.length > 0) {
-        for (const category of categories) {
-           dispatch(fetchSubCategoriesByCategory(category.categoryId));
-        }
-      }
-      
-    }, [dispatch]);
+useEffect(() => {
+    // Fetch categories when the component mounts
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
 
     
 
@@ -37,15 +32,6 @@ const CourseList = () => {
             <CourseCard
               course={course}
               user={user}
-              onEnroll={() => {
-                if (!user) {
-                  // Navigate to the course details or enrollment page
-                  
-                } else {
-                  // Redirect to login if user is not logged in
-                  navigate('/login');
-                }
-              }}
             />
           </Grid>
         ))

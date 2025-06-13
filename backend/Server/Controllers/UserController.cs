@@ -42,9 +42,10 @@ namespace Server.Controllers
             return Ok(user);
         }
 
-        [Authorize(Policy = "ManagerOnly")]
-        
-        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin/all")]
+
+      
         public IActionResult GetAll()
         {
             return Ok(_userService.GetAll());
@@ -63,10 +64,9 @@ namespace Server.Controllers
             _userService.Update(user);
             return user;
         }
-
-        [HttpPost]
-        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+         [AllowAnonymous]
+         [HttpPost]
+        
         public ActionResult<BLUser> Create(BLUser user)
         {
             if (user == null)

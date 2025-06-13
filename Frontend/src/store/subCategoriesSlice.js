@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchSubCategoriesByCategory } from './thunk';
+import { fetchSubCategories } from './thunk';
 
 
 const subCategoriesSlice = createSlice({
@@ -9,29 +9,24 @@ const subCategoriesSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {
-    clearSubCategories: (state) => {
-      state.items = [];
-      state.error = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchSubCategoriesByCategory.pending, (state) => {
+      .addCase(fetchSubCategories.pending, (state) => {
+        
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchSubCategoriesByCategory.fulfilled, (state, action) => {
+      .addCase(fetchSubCategories.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload; // Assuming payload contains the subcategories
       })
-      .addCase(fetchSubCategoriesByCategory.rejected, (state, action) => {
+      .addCase(fetchSubCategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload; // Handle the error appropriately
       });
   },
 });
 
-export const { clearSubCategories } = subCategoriesSlice.actions;
 
 export default subCategoriesSlice.reducer;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, Typography, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../store/userSlice';
+import { clearUser } from '../store/userSlice';
 
 const UserProfile = () => {
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const UserProfile = () => {
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
           Courses Enrolled: {user.coursesEnrolled ?? '-'}
         </Typography>
-        <Button variant="contained" color="primary" onClick={() => dispatch(logout())}>
+        <Button variant="contained" color="primary" onClick={() => dispatch(clearUser())}>
           Logout
         </Button>
       </CardContent>

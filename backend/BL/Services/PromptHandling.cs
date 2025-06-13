@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using BL.Exception;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BL.Services
 {
@@ -18,12 +20,19 @@ namespace BL.Services
     {
 
         private readonly IPrompt _learningRepository;
+        private readonly ISubCategory _subCategoryRepository;
+        private readonly ICategory _categoryRepository;
+         private readonly OpenAiSettings _openAiSettings;
 
-        public PromptHandling(IDal learningRepository)
+      
+        public PromptHandling(IOptions<OpenAiSettings> openAiSettings, IDal learningRepository)
         {
             _learningRepository = learningRepository.Prompt;
+            _subCategoryRepository = learningRepository.SubCategory;
+            _categoryRepository = learningRepository.Category;
+            _openAiSettings = openAiSettings.Value;
         }
-        public async Task<BLPrompt> ProcessPromptAsync(BLPrompt prompt)
+        public async Task<string> ProcessPromptAsync(BLPrompt prompt)
         {
             ValidatePrompt(prompt);
             try
@@ -36,22 +45,49 @@ namespace BL.Services
                     CategoryId = prompt.CategoryId,
                     SubCategoryId = prompt.SubCategoryId,
                     Prompt1 = prompt.Prompt1,
-                
                     CreatedAt = DateTime.UtcNow // או כל תאריך אחר שתרצה
                 };
-                // שליחת הפנייה ל-AI
-                // var aiResponse = await CallOpenAiApi(prompt.Prompt1);
+               
+                    // שליחת הפנייה ל-AI
+                    var aiResponse = await CallOpenAiApi(prompt.Prompt1);
+                if (true)
+                {
+                    
+                }
+                bool b= await ValidateRequest( new ValidatePromptRequest
+                {
+                    UserPrompt = prompt.Prompt1,
+                    CategoryName = _categoryRepository.Read(prompt.CategoryId)?.Name ?? "Unknown",
+                    SubCategoryName = _subCategoryRepository.Read(prompt.SubCategoryId)?.Name ?? "Unknown"
+                });
+                if (b)
+                {
 
-                // שמירת התגובה בבסיס הנתונים
-                prompt.Response = "aiResponse";
-                await CreateAsync(prompt);
+                    // שמירת התגובה בבסיס הנתונים
+                    prompt.Response = aiResponse;
+                    await CreateAsync(prompt);
 
-                return prompt;
-            } // Fix missing return statement
+                    return aiResponse;
+                }
+                else
+                {
+                    throw new HttpRequestException("הפנייה אינה מתאימה לקטגוריה או תת־קטגוריה שנבחרו.");
+                }
+                } // Fix missing return statement
             catch (DbUpdateException ex)
             {
                 // טיפול בשגיאות של עדכון בבסיס הנתונים
                 throw new ServiceException("שגיאה בהוספת הפנייה לבסיס הנתונים.", ex);
+            }
+            catch (HttpRequestException ex)
+            {
+                // הצגת השגיאה למשתמש
+            string errorMessage = $"שגיאה: {ex.Message}"; // כאן נשלוף את הודעת השגיאה
+                Console.WriteLine(errorMessage); // או להציג למשתמש בדרך אחרת
+                // לזרוק את השגיאה הלאה
+                throw new HttpRequestException("הפנייה אינה מתאימה לקטגוריה או תת־קטגוריה שנבחרו.", ex);
+            
+          
             }
             catch (System.Exception ex)
             {
@@ -59,6 +95,8 @@ namespace BL.Services
                 throw new ServiceException("שגיאה בלתי צפויה.", ex);
             }
         }
+
+     
 
         private async Task<string> CallOpenAiApi(string promptText)
         {
@@ -76,8 +114,7 @@ namespace BL.Services
 
                 var json = JsonConvert.SerializeObject(requestBody);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "OPENAI_API_KEY".Replace("\r", "").Replace("\n", ""));
-
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _openAiSettings.ApiKey);
 
                 var response = await httpClient.PostAsync("https://api.openai.com/v1/chat/completions", content);
                 response.EnsureSuccessStatusCode();
@@ -108,17 +145,20 @@ namespace BL.Services
             {
                 throw new ValidationException("הטקסט של הפנייה לא יכול להיות ריק.");
             }
-            if (prompt.SubCategoryId <= 0)
-            {
-                throw new ValidationException("תת הקטגוריה חייבת להיות תקפה.");
-            }
-            if (prompt.CategoryId <= 0)
-            {
-                throw new ValidationException("הקטגוריה חייבת להיות תקפה.");
-            }
+           
             if (prompt.UserId <= 0)
             {
                 throw new ValidationException("משתמש חייב להיות תקף.");
+            }
+            Category category = _categoryRepository.Read(prompt.CategoryId);
+            if (category == null)
+            {
+                throw new ValidationException("הקטגוריה אינה קיימת.");
+            }
+            SubCategory? bLSubCategory = _subCategoryRepository.GetAllByCategory(prompt.CategoryId).Find(e => e.SubCategoryId == prompt.SubCategoryId); // קריאה לפונקציה Read כדי לוודא שהפנייה קיימת
+            if (bLSubCategory == null)
+            {
+                throw new ValidationException("תת הקטגוריה אינה קיימת.");
             }
             // בדיקת תוכן: לא לאפשר טקסטים פוגעניים או ריקים מתוכן
             var forbiddenWords = new[] { "קללה", "פוגעני", "offensive" };
@@ -279,6 +319,121 @@ namespace BL.Services
         })
         .ToList()
 );
+        }
+
+        private async Task<bool> ValidateRequest(ValidatePromptRequest request)
+        {
+            string prompt = $@"
+                   הטקסט הבא הוא שאלה או בקשה של משתמש:
+                   ""{request.UserPrompt}""
+                   האם השאלה קשורה לנושא '{request.CategoryName}' או תת־הנושא '{request.SubCategoryName}'?
+                   אם כן, ענה 'כן'. אם לא, ענה 'לא'.";
+
+            
+            string aiResponse = await CallOpenAiApi(prompt);
+           
+            string answer = aiResponse.Trim().ToLower();
+            if (!(answer.StartsWith("כן") || answer.StartsWith("yes")))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public Task<BLPrompt> GetPromptByIdAsync(int id)
+        {
+            return Task.Run(() =>
+            {
+                var prompt = _learningRepository.Read(id);
+                if (prompt == null)
+                {
+                    throw new NotFoundException($"Prompt with ID {id} not found.");
+                }
+                return new BLPrompt
+                {
+                    Id = prompt.Id,
+                    UserId = prompt.UserId,
+                    CategoryId = prompt.CategoryId,
+                    SubCategoryId = prompt.SubCategoryId,
+                    Prompt1 = prompt.Prompt1,
+                    Response = prompt.Response,
+                    CreatedAt = prompt.CreatedAt
+                };
+            });
+
+        }
+
+        public Task UpdateAsync(BLPrompt entity)
+        {
+            return Task.Run(() =>
+            {
+                var existingPrompt = _learningRepository.Read(entity.Id);
+                if (existingPrompt == null)
+                {
+                    throw new NotFoundException($"Prompt with ID {entity.Id} not found.");
+                }
+                // Validate the prompt before updating
+                ValidatePrompt(entity);
+                existingPrompt.Prompt1 = entity.Prompt1;
+                existingPrompt.Response = entity.Response;
+                existingPrompt.CategoryId = entity.CategoryId;
+                existingPrompt.SubCategoryId = entity.SubCategoryId;
+                _learningRepository.Update(existingPrompt);
+            });
+
+        }
+
+        public Task DeleteAsync(int id)
+        {
+            return Task.Run(() =>
+            {
+                var prompt = _learningRepository.Read(id);
+                if (prompt == null)
+                {
+                    throw new NotFoundException($"Prompt with ID {id} not found.");
+                }
+                _learningRepository.Delete(id);
+            });
+
+        }
+
+        public async Task<List<BLPrompt>> GetAllAsync()
+        {
+            var prompts = await _learningRepository.GetAllAsync(); // הפוך גם את הריפוזיטורי לאסינכרוני אם אפשר
+
+            return prompts.Select(p => new BLPrompt
+            {
+                Id = p.Id,
+                UserId = p.UserId,
+                CategoryId = p.CategoryId,
+                SubCategoryId = p.SubCategoryId,
+                Prompt1 = p.Prompt1,
+                Response = p.Response,
+                CreatedAt = p.CreatedAt
+            }).ToList();
+        }
+
+
+
+
+
+        public Task<List<BLPrompt>> GetPromptsByUserIdAndSubCategoryAsync(int userId, int subCategoryId)
+        {
+            return Task.Run(() =>
+                _learningRepository.GetAll()
+                    .Where(p => p.UserId == userId && p.SubCategoryId == subCategoryId)
+                    .Select(p => new BLPrompt
+                    {
+                        Id = p.Id,
+                        UserId = p.UserId,
+                        CategoryId = p.CategoryId,
+                        SubCategoryId = p.SubCategoryId,
+                        Prompt1 = p.Prompt1,
+                        Response = p.Response,
+                        CreatedAt = p.CreatedAt
+                    })
+                    .ToList()
+            );
         }
     }
 }

@@ -8,6 +8,8 @@ import { fetchCategories } from '../store/thunk';
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.categories);
+  const user = useSelector((state) => state.user.user);
+  // אם המשתמש לא מחובר, ננתב אותו לעמוד ההתחברות
  
 
   useEffect(() => {
