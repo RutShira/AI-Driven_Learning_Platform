@@ -7,17 +7,17 @@ my-react-app/
 │   ├── public/
 │   │   └── index.html
 │   ├── src/
-│   │   ├── assets/             
-│   │   ├── components/        
-│   │   ├── features/           
-│   │   ├── pages/              
-│   │   ├── routes/             
-│   │   ├── services/           
-│   │   ├── store/              
+│   │   ├── assets/              # Images, icons, and style files
+│   │   ├── components/          # Reusable UI components (buttons, forms, etc.)
+│   │   ├── features/            # Redux slices and domain logic (users, courses, etc.)
+│   │   ├── pages/               # Application pages (Home, Login, Dashboard, etc.)
+│   │   ├── routes/              # Routing configuration (React Router)
+│   │   ├── services/            # API calls (Axios, etc.)
+│   │   ├── store/               # Redux store configuration
 │   │   ├── App.jsx
 │   │   ├── main.jsx
 │   │   └── index.css
-│   ├── .env                   
+│   ├── .env                     # Environment variables
 │   ├── package.json
 │   └── README.md
 │
