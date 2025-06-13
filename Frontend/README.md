@@ -1,3 +1,31 @@
+# מבנה הפרוייקט
+
+
+my-react-app/
+│
+├── react/
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── assets/              # תמונות, אייקונים, קבצי סטייל
+│   │   ├── components/          # קומפוננטים חוזרים (כפתורים, טפסים וכו')
+│   │   ├── features/            # Redux slices, לוגיקה לפי תחום (users, courses וכו')
+│   │   ├── pages/               # דפי אפליקציה (Home, Login, Dashboard וכו')
+│   │   ├── routes/              # הגדרות ראוטינג (React Router)
+│   │   ├── services/            # קריאות API (Axios וכו')
+│   │   ├── store/               # הגדרות Redux store
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── .env                     # משתני סביבה
+│   ├── package.json
+│   └── README.md
+│
+└── node_modules/
+
+
+
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
