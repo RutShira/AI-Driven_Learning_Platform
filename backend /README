@@ -1,0 +1,23 @@
+/SolutionRoot
+│
+├── BL/                        # Business Logic Layer
+│   ├── Api/                   # Interfaces for BL
+│   ├── Models/                # Business models (DTOs, ViewModels)
+│   ├── Services/              # Business logic services
+│   └── BLManager.cs           # Main BL manager
+│
+├── Dal/                       # Data Access Layer
+│   ├── Api/                   # Interfaces for DAL
+│   ├── Models/                # Data models (Entities)
+│   └── Services/              # Data access services
+│
+├── Server/                    # Web API Layer
+│   ├── Controllers/           # API controllers
+│   ├── MiddlewareExceptions/  # Custom middleware (e.g., error handling)
+│   ├── appsettings.json       # Configuration file
+│   ├── Program.cs             # Main entry point
+│   └── Startup.cs             # Startup configuration
+│
+├── .gitignore
+├── README.md
+└── <SolutionName>.sln
