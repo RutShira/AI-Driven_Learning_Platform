@@ -15,10 +15,11 @@ namespace Dal.Services
         {
             _context = db;
         }
-        public void Create(SubCategory entity)
+        public SubCategory? Create(SubCategory entity)
         {
             _context.SubCategories.Add(entity);
             _context.SaveChanges();
+            return _context.SubCategories?.FirstOrDefault(e => e.Name == entity.Name);
         }
 
 
@@ -38,6 +39,12 @@ namespace Dal.Services
             return _context.SubCategories.ToList();
         }
 
+        public List<SubCategory> GetAllByCategory(int idCategory)
+        {
+            return _context.SubCategories
+                .Where(sc => sc.CategoryId == idCategory)
+                .ToList();
+        }
 
         public SubCategory Read(int id)
         {

@@ -8,8 +8,8 @@ namespace Dal.Api
 {
     public interface ICrud<T>
     {
-      
-            void Create(T entity);
+
+            T Create(T entity);
             T Read(int id);
             void Update(T entity);
             void Delete(int id);

@@ -2,6 +2,7 @@
 using BL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Server.Controllers
 {
@@ -20,6 +21,7 @@ namespace Server.Controllers
         {
             try
             {
+                
                 var subcategories = _subcategoryServiec.GetAll();
                 return Ok(subcategories);
             }
@@ -29,7 +31,7 @@ namespace Server.Controllers
             }
         }
         [HttpGet]
-        [Route("/category={id}")]
+        [Route("category={id}")]
         public ActionResult<List<BLSubCategory>> GetAllByCategory(int id)
         {
             if (id <= 0)
@@ -80,7 +82,7 @@ namespace Server.Controllers
         }
     
         [HttpPost]
-        public ActionResult<BLSubCategory> Create(BLSubCategory subcategory)
+        public ActionResult<BLSubCategory>  Create([FromBody]BLSubCategory subcategory)
         {
             if (subcategory == null)
             {
@@ -88,8 +90,8 @@ namespace Server.Controllers
             }
             try
             {
-                _subcategoryServiec.Create(subcategory);
-                return CreatedAtAction(nameof(GetById), new { id = subcategory.SubCategoryId }, subcategory);
+                BLSubCategory bLSub= _subcategoryServiec.Create(subcategory);
+                return  CreatedAtAction(nameof(GetById), new { id = bLSub.SubCategoryId }, bLSub);
             }
             catch (Exception ex)
             {

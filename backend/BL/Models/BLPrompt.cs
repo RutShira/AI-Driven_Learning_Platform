@@ -13,7 +13,7 @@ namespace BL.Models
     {
         [Key] // מציין שמדובר במפתח ראשי
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // מפתח רץ
-        public int Id { get; }
+        public int Id { get; set; }
 
         [Required] // חובה
         public int UserId { get; set; }

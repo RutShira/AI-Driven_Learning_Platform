@@ -22,11 +22,11 @@ namespace BL.Services
 
         }
 
-        public void Create(BLUser entity)
+        public BLUser Create(BLUser entity)
         {
             try
             {
-                _user.Create(new User
+                User user=_user.Create(new User
                 {
                     UserId = entity.UserId,
                     Name = entity.Name,
@@ -34,6 +34,14 @@ namespace BL.Services
                     Email = entity.Email,
                     Role = entity.Role
                 });
+                return new BLUser
+                {
+                    UserId = user.UserId,
+                    Name = user.Name,
+                    Phone = user.Phone,
+                    Email = user.Email,
+                    Role = user.Role
+                };
             }
             catch (SqlException dbEx)
             {

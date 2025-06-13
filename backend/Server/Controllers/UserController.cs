@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Specialized;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -22,16 +23,18 @@ namespace Server.Controllers
             _userService = BL.User;
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        [HttpPost]
+        [Route("login")]
+        public IActionResult GetById([FromBody] LoginModel loginModel)
         {
-            if (id <= 0)
+            Console.WriteLine("in controller");
+            if (loginModel.Password <= 0)
             {
                 return BadRequest("ID cannot be zero.");
             }
 
-            var user = _userService.Read(id);
-            if (user == null)
+            var user = _userService.Read(loginModel.Password);
+            if (user.Name != loginModel.Username)
             {
                 return NotFound();
             }
@@ -39,9 +42,10 @@ namespace Server.Controllers
             return Ok(user);
         }
 
-        [Authorize(Policy = "ManagerOnly")]
-        
-        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin/all")]
+
+      
         public IActionResult GetAll()
         {
             return Ok(_userService.GetAll());
@@ -60,10 +64,9 @@ namespace Server.Controllers
             _userService.Update(user);
             return user;
         }
-
-        [HttpPost]
-        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+         [AllowAnonymous]
+         [HttpPost]
+        
         public ActionResult<BLUser> Create(BLUser user)
         {
             if (user == null)

@@ -13,7 +13,7 @@ namespace BL.Models
     {
         [Required]
         [Key] // מציין שמדובר במפתח ראשי
-         // מפתח רץ
+       
         public int UserId { get; set; }
 
         [Required(ErrorMessage = "Name is required.")] // חובה עם הודעת שגיאה

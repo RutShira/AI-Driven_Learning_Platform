@@ -13,7 +13,7 @@ namespace BL.Models
     {
 
         [Key]
-        public int CategoryId { get; }
+        public int CategoryId { get; set; }
 
         [Required(ErrorMessage = "The name is required.")] // חובה עם הודעת שגיאה
         [StringLength(100, ErrorMessage = "The name cannot exceed 100 characters.")] // אורך מקסימלי

@@ -52,8 +52,9 @@ namespace Server.Controllers
             }
             try
             {
-                _categoryServiec.Create(category);
-                return CreatedAtAction(nameof(GetById), new { id = category.CategoryId }, category);
+                BLCategory bLCategory= _categoryServiec.Create(category);
+
+                return CreatedAtAction(nameof(GetById), new { id = bLCategory.CategoryId }, bLCategory);
             }
             catch (Exception ex)
             {

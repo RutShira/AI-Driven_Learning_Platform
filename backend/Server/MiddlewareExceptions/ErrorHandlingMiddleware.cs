@@ -29,8 +29,8 @@ public class ErrorHandlingMiddleware
 
         var result = JsonConvert.SerializeObject(new
         {
-            message = "שגיאה בעת עיבוד הבקשה",
-            details = ex.Message // ניתן להוסיף פרטים נוספים אם צריך
+            message = ex.Message,
+            details ="שגיאה בעת עיבוד הבקשה"  // ניתן להוסיף פרטים נוספים אם צריך
         });
         return context.Response.WriteAsync(result);
     }

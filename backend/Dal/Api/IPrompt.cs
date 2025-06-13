@@ -10,7 +10,8 @@ namespace Dal.Api
 
     public interface IPrompt : ICrud<Prompt>
     {
-       
-        
+        Task<List<Prompt>> GetAllAsync();
+
+
     }
 }
