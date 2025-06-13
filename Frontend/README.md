@@ -7,17 +7,17 @@ my-react-app/
 │   ├── public/
 │   │   └── index.html
 │   ├── src/
-│   │   ├── assets/              # תמונות, אייקונים, קבצי סטייל
-│   │   ├── components/          # קומפוננטים חוזרים (כפתורים, טפסים וכו')
-│   │   ├── features/            # Redux slices, לוגיקה לפי תחום (users, courses וכו')
-│   │   ├── pages/               # דפי אפליקציה (Home, Login, Dashboard וכו')
-│   │   ├── routes/              # הגדרות ראוטינג (React Router)
-│   │   ├── services/            # קריאות API (Axios וכו')
-│   │   ├── store/               # הגדרות Redux store
+│   │   ├── assets/             
+│   │   ├── components/        
+│   │   ├── features/           
+│   │   ├── pages/              
+│   │   ├── routes/             
+│   │   ├── services/           
+│   │   ├── store/              
 │   │   ├── App.jsx
 │   │   ├── main.jsx
 │   │   └── index.css
-│   ├── .env                     # משתני סביבה
+│   ├── .env                   
 │   ├── package.json
 │   └── README.md
 │
