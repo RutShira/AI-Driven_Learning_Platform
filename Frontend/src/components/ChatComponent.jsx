@@ -42,7 +42,7 @@ const handleSendMessage = async () => {
         const formattedResponse = breakTextIntoLines(response.payload, 5); // 5 מילים בכל שורה
         setMessages(prevMessages => [...prevMessages, { sender: 'bot', text: formattedResponse }]);
       } else {
-        const errorMessage = response.payload?.details;
+        const errorMessage = response.payload?.message || 'שגיאה ביצירת ההודעה. אנא נסה שוב מאוחר יותר.';
         console.error('Error creating prompt:', errorMessage);
         
         setMessages(prevMessages => [...prevMessages, { sender: 'bot', text: `שגיאה: ${errorMessage}` }]);

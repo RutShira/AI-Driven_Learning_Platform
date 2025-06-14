@@ -57,13 +57,13 @@ public class Startup
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
         });
-        
-        string connectionString = _configuration.GetConnectionString("DefaultConnection");
-        services.AddScoped<IBL>(provider =>
-        new BLManager(connectionString, provider.GetRequiredService<IOptions<OpenAiSettings>>()));
 
-        
-        
+        string connectionString = _configuration.GetConnectionString("DefaultConnection");
+        services.AddDalServices(connectionString);
+        services.AddBlServices();
+
+
+
 
         services.AddCors(options =>
         {
